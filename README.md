@@ -18,7 +18,7 @@
 
 | Atividade                                                             | Tecnologias Eleitas           |
 |-----------------------------------------------------------------------|-------------------------------|
-| Ambiente de Programação / IDE                                         | Visual Studio Code            |
+| Ambiente de Programação / IDE                                         | Visual Studio Code, IntelliJ  |
 | Linguagens de programação                                             | Java                          |
 | Gestão de configurações / controlo de versões no repositório local    | SCM Git                       |
 | Gestão de configurações / controlo de versões no repositório remoto para suporte ao trabalho colaborativo e entrega do projeto | GitHub.com |
