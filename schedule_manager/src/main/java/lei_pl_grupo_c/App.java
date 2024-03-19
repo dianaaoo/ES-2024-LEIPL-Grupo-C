@@ -60,14 +60,18 @@ public class App {
 
         // T3
 
+        // FIXME - temos de definir como é que indicamos o ficheiro certo i.e., como
+        // passamos o argumento do file browser
         Scanner scanner = new Scanner(new File("schedule_manager/src/samples/HorarioDeExemplo.csv"));
 
-        scanner.useDelimiter(";"); // separa por ';'
+        while (scanner.hasNextLine()) {
 
-        while (scanner.hasNext()) {
-            System.out.print(scanner.next());
+            String[] line = scanner.nextLine().toString().split(";");
+
+            System.out.println(line[0]);
+
         }
-        
+
         scanner.close();
 
     }
