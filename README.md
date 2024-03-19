@@ -8,6 +8,26 @@
 
 # GAV // Dependency Coordinates :
 
+| ID                                      | Value                       |
+|-----------------------------------------|-----------------------------|
 | Group ID                                | lei_pl_grupo_c              |
 | Artifact ID                             | schedule_manager            |
 | Version                                 | keeps changing, go figure   |
+
+# Software Utilizado :
+
+| Atividade                                                             | Tecnologias Eleitas           |
+|-----------------------------------------------------------------------|-------------------------------|
+| Ambiente de Programação / IDE                                         | Visual Studio Code            |
+| Linguagens de programação                                             | Java                          |
+| Gestão de configurações / controlo de versões no repositório local    | SCM Git                       |
+| Gestão de configurações / controlo de versões no repositório          |                               |
+|    remoto para suporte ao trabalho colaborativo e entrega do          | GitHub.com                    |
+| Gestão das dependências de bibliotecas que forem usadas               | Apache Maven                  |
+| Avaliação da qualidade do software produzido, a partir das            |                               |
+|    métricas extraídas do código                                       | !!!                           |
+| Testes e avaliação de cobertura de testes                             | JUnit (?)                     |
+| Documentação do software produzido                                    | JavaDoc (?)                   |
+| Gestão do projeto segundo abordagem Scrum, com rastreio entre os      | Atlassian Jira                |
+|    cartões das user stories e os eventos respetivos no GitHub         | (superset Trello)             |
+|    (commits, pull requests)                                           | com Power-Up do GitHub (!!!)  |
