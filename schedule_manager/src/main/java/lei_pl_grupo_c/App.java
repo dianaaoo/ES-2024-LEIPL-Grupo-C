@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class App {
@@ -64,11 +66,19 @@ public class App {
         // passamos o argumento do file browser
         Scanner scanner = new Scanner(new File("schedule_manager/src/samples/HorarioDeExemplo.csv"));
 
+        ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
+
         while (scanner.hasNextLine()) {
 
-            String[] line = scanner.nextLine().toString().split(";");
+            String[] lineContents = scanner.nextLine().toString().split(";");
 
-            System.out.println(line[0]);
+            ArrayList<String> line = new ArrayList<String>();
+
+            for (String content : lineContents) {
+                line.add(content);
+            }
+
+            System.out.println(line);
 
         }
 
