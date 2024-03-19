@@ -1,56 +1,45 @@
 package lei_pl_grupo_c;
 
+// jfx imports
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+// java lib imports
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.net.URL;
 
-// Apache Commons CSV 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+public class App extends Application{
 
-public class App {
     public static void main(String[] args) {
-        System.out.println("Running Java Main");
-
-        try {
-            readCSV();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        launch(args);
     }
 
-    private static void readCSV() throws IOException {
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader();
 
-        // FIXME - temos de definir como é que indicamos o ficheiro certo i.e., como
-        // passamos o argumento do file browser
-        Scanner scanner = new Scanner(new File("schedule_manager/src/samples/HorarioDeExemplo.csv"));
+        MyFxmlController controller = new MyFxmlController();
+        controller.setValue("New value");
+        loader.setController(controller);
 
-        ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
+        File fxmlFile = new File("helloworld.fxml");
+        URL fxmlUrl = fxmlFile.toURI().toURL();
+        loader.setLocation(fxmlUrl);
 
-        while (scanner.hasNextLine()) {
+        VBox vbox = loader.<VBox>load();
 
-            String[] lineContents = scanner.nextLine().toString().split(";");
+        // controller for fxml
+        MyFxmlController controllerRef = loader.getController();
+        // printing button text getters
+        System.out.println(controllerRef.getValue());
+        System.out.println(controllerRef.getLabel1Text());
+        System.out.println(controllerRef.getLabel2Text());
 
-            ArrayList<String> line = new ArrayList<String>();
-
-            for (String content : lineContents) {
-                line.add(content);
-            }
-
-            System.out.println(line);
-
-        }
-
-        scanner.close();
-
+        Scene scene = new Scene(vbox);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 }
