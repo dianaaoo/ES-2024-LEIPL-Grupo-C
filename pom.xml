@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>lei_pl_grupo_c</groupId>
-  <artifactId>schedule_manager</artifactId>
+  <artifactId>ES-2024-LEIPL-Grupo-C</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>schedule_manager</name>
-  <description>A simple schedule_manager.</description>
+  <name>ES-2024-LEIPL-Grupo-C</name>
+  <description>A simple ES-2024-LEIPL-Grupo-C.</description>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
