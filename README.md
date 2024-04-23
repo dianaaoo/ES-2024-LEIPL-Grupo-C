@@ -11,7 +11,7 @@
 | ID                                      | Value                       |
 |-----------------------------------------|-----------------------------|
 | Group ID                                | lei_pl_grupo_c              |
-| Artifact ID                             | schedule_manager            |
+| Artifact ID                             | ES-2024-LEIPL-Grupo-C            |
 | Version                                 | keeps changing, go figure   |
 
 # Software Utilizado :

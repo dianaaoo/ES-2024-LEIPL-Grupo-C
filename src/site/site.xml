@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="schedule_manager" xmlns="http://maven.apache.org/DECORATION/1.8.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project name="ES-2024-LEIPL-Grupo-C" xmlns="http://maven.apache.org/DECORATION/1.8.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 http://maven.apache.org/xsd/decoration-1.8.0.xsd">
   <bannerLeft>
-    <name>schedule_manager</name>
+    <name>ES-2024-LEIPL-Grupo-C</name>
     <src>https://maven.apache.org/images/apache-maven-project.png</src>
     <href>https://www.apache.org/</href>
   </bannerLeft>
