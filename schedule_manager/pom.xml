@@ -4,14 +4,17 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>lei_pl_grupo_c</groupId>
+  <parent>
+    <groupId>lei_pl_grupo_c</groupId>
+    <artifactId>ES-2024-LEIPL-Grupo-C</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
   <artifactId>schedule_manager</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
   <name>schedule_manager</name>
   <description>A simple schedule_manager.</description>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,12 +31,12 @@
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>17</version>
+      <version>21</version>
   </dependency>
   <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>17</version>
+      <version>21</version>
   </dependency>
   </dependencies>
 

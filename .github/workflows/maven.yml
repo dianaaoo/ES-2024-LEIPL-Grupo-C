@@ -28,11 +28,9 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build compile with Maven
-      working-directory: ./schedule_manager
-      run: mvn -B compile --file schedule_manager/pom.xml
+      run: mvn -B compile --file pom.xml
     - name: javadoc with Maven
-      working-directory: ./schedule_manager
-      run: mvn -B javadoc:javadoc --file schedule_manager/pom.xml
+      run: mvn -B javadoc:javadoc --file pom.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
