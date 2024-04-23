@@ -34,13 +34,19 @@
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
-      <version>21</version>
-  </dependency>
-  <dependency>
+      <version>17</version>
+    </dependency>
+    <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-fxml</artifactId>
-      <version>21</version>
-  </dependency>
+      <version>17</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.json/json -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20240303</version>
+    </dependency>
   </dependencies>
 
   <build>
