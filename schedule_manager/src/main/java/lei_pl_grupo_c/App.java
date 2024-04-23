@@ -29,7 +29,7 @@ public class App extends Application{
         URL fxmlUrl = fxmlFile.toURI().toURL();
         loader.setLocation(fxmlUrl);
 
-        VBox vbox = loader.<VBox>load();
+        VBox vbox = loader.load();
 
         // controller for fxml
         MyFxmlController controllerRef = loader.getController();
