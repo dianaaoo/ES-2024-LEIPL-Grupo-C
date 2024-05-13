@@ -9,18 +9,13 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import org.json.*;
-
 
 public class App {
 
-    private JButton readCsvButton;
-    private JButton saveJsonButton;
-    private JSONArray jsonArray;
-    private JEditorPane htmlPane;
+    private static final String HORARIO_CSV_EXAMPLE = "HorarioDeExemplo.csv";
+    private final JFrame frame;
+    private final JFileChooser fileChooser;
+    private List<ScheduleEntry> horario; // List to store Schedule entries
 
     public App() {
         frame = new JFrame("Gestão de Horários");
@@ -30,42 +25,61 @@ public class App {
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
 
-        readCsvButton = new JButton("Read CSV");
-
-        saveCsvButton = new JButton("Save CSV");
-        readJsonButton = new JButton("Read JSON");
-        saveJsonButton = new JButton("Save JSON");
-
-        readCsvButton.addActionListener(new ActionListener() {
+        // Menu for File operations
+        JMenu fileMenu = new JMenu("Ficheiro");
+        menuBar.add(fileMenu);
+        JMenuItem loadScheduleMenuItem = new JMenuItem("Carregar Horário");
+        fileMenu.add(loadScheduleMenuItem);
+        loadScheduleMenuItem.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                readCsvFile();
+                loadSchedule();
+            }
+        });
+        JMenuItem saveScheduleMenuItem = new JMenuItem("Gravar Horário");
+        fileMenu.add(saveScheduleMenuItem);
+        saveScheduleMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveSchedule();
             }
         });
 
-        saveJsonButton.addActionListener(new ActionListener() {
+        // Menu for Schedule view and manipulation
+        JMenu ScheduleMenu = new JMenu("Horário");
+        menuBar.add(ScheduleMenu);
+        JMenuItem viewScheduleMenuItem = new JMenuItem("Visualizar Horário");
+        ScheduleMenu.add(viewScheduleMenuItem);
+        viewScheduleMenuItem.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                saveJsonFile();
+                showSchedulePane();
             }
         });
 
-        upperPanel.add(readCsvButton);
-        upperPanel.add(saveJsonButton);
+        // TODO Other menus for functionalities (implement similar structure)
+        // - Cadastro de Salas (Classrooms)
+        // - Sugerir Substituição (Suggest Substitution)
+        // - Sugerir Aulas UC (Suggest Course)
+        
+        // Button to open Schedule in web browser
+        JButton button = new JButton("Mostrar Salas no Browser Web");  
+        button.setBounds(20,20,250,50);     
+        button.addActionListener(new ActionListener(){  	
+            public void actionPerformed(ActionEvent e){  
+                openScheduleInBrowser();
+            }  
+        });	
+        frame.getContentPane().add(button);
 
-        add(upperPanel, BorderLayout.NORTH);
-
-        htmlPane = new JEditorPane();
-        htmlPane.setContentType("text/html");
-        htmlPane.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(htmlPane);
-        add(scrollPane, BorderLayout.CENTER);
+        fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir"))); // Set default directory
     }
 
-    private void readCsvFile() {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Choose CSV File");
-        int userSelection = fileChooser.showOpenDialog(this);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File csvFile = fileChooser.getSelectedFile();
+    private void loadSchedule() {
+        int returnValue = fileChooser.showOpenDialog(frame);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
             try {
                 horario = ScheduleParser.parseScheduleCSV(file);
                 JOptionPane.showMessageDialog(frame, "Horário carregado com sucesso!");
@@ -89,29 +103,21 @@ public class App {
             JOptionPane.showMessageDialog(frame, "Carregue o horário antes de visualizar.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Save JSON File");
-        int userSelection = fileChooser.showSaveDialog(this);
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File jsonFile = fileChooser.getSelectedFile();
-            try (FileWriter writer = new FileWriter(jsonFile)) {
-                jsonArray.write(writer);
-                JOptionPane.showMessageDialog(this, "JSON file saved successfully", "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error saving JSON file", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        // TODO Implement logic to display Schedule Pane
     }
 
-    private void displayHTMLContent(String htmlContent) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                htmlPane.setText(htmlContent);
-            }
-        });
+    private void openScheduleInBrowser() {
+        if (horario == null) {
+            JOptionPane.showMessageDialog(frame, "Carregue o horário antes de abrir no navegador.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        // TODO Open Schedule file in web browser
+        try {
+            Desktop desk = Desktop.getDesktop(); 
+            desk.browse(new java.net.URI("file://" + System.getProperty("user.dir") + File.separator + HORARIO_CSV_EXAMPLE));
+        } catch (IOException | URISyntaxException e) {
+            JOptionPane.showMessageDialog(frame, "Erro ao abrir o horário no navegador: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public static void main(String[] args) {
