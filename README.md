@@ -26,4 +26,4 @@
 | Avaliação da qualidade do software produzido, a partir das métricas extraídas do código | Jupiter, SonarQube                           |
 | Testes e avaliação de cobertura de testes                             | JUnit                         |
 | Documentação do software produzido                                    | JavaDoc                       |
-| Gestão do projeto segundo abordagem Scrum, com rastreio entre os cartões das user stories e os eventos respetivos no GitHub (commits, pull requests) | Atlassian Jira (superset Trello) com Power-Up do GitHub (!!!) |
+| Gestão do projeto segundo abordagem Scrum, com rastreio entre os cartões das user stories e os eventos respetivos no GitHub (commits, pull requests) | Atlassian Jira (superset Trello) com Power-Up do GitHub |
