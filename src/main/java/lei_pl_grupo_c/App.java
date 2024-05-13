@@ -4,12 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.Iterator;
+
 import org.json.*;
 
 public class App extends JFrame {
 
     private JButton readCsvButton;
     private JButton saveJsonButton;
+    private JButton readJsonButton;
+    private JButton saveCsvButton;
+
     private JSONArray jsonArray;
     private JEditorPane htmlPane;
 
@@ -22,6 +27,8 @@ public class App extends JFrame {
         upperPanel.setLayout(new FlowLayout());
 
         readCsvButton = new JButton("Read CSV");
+        saveCsvButton = new JButton("Save CSV");
+        readJsonButton = new JButton("Read JSON");
         saveJsonButton = new JButton("Save JSON");
 
         readCsvButton.addActionListener(new ActionListener() {
@@ -36,6 +43,21 @@ public class App extends JFrame {
             }
         });
 
+        readJsonButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                readJsonFile();
+            }
+        });
+
+        saveCsvButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveCsvFile();
+            }
+        });
+
+        upperPanel.add(readJsonButton);
+        upperPanel.add(saveCsvButton);
+
         upperPanel.add(readCsvButton);
         upperPanel.add(saveJsonButton);
 
@@ -49,7 +71,7 @@ public class App extends JFrame {
     }
 
     private void readCsvFile() {
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser(new File("files"));
         fileChooser.setDialogTitle("Choose CSV File");
         int userSelection = fileChooser.showOpenDialog(this);
         if (userSelection == JFileChooser.APPROVE_OPTION) {
@@ -85,7 +107,7 @@ public class App extends JFrame {
             return;
         }
 
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser(new File("files"));
         fileChooser.setDialogTitle("Save JSON File");
         int userSelection = fileChooser.showSaveDialog(this);
         if (userSelection == JFileChooser.APPROVE_OPTION) {
@@ -97,6 +119,83 @@ public class App extends JFrame {
             } catch (IOException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error saving JSON file", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void readJsonFile() {
+        JFileChooser fileChooser = new JFileChooser(new File("files"));
+        fileChooser.setDialogTitle("Choose JSON File");
+        int userSelection = fileChooser.showOpenDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File jsonFile = fileChooser.getSelectedFile();
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(jsonFile));
+                StringBuilder jsonContent = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    jsonContent.append(line);
+                }
+                reader.close();
+
+                jsonArray = new JSONArray(jsonContent.toString());
+
+                JOptionPane.showMessageDialog(this, "JSON file read successfully", "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException | JSONException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error reading JSON file", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void saveCsvFile() {
+        if (jsonArray == null || jsonArray.length() == 0) {
+            JOptionPane.showMessageDialog(this, "No data to save", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser(new File("files"));
+        fileChooser.setDialogTitle("Save CSV File");
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File csvFile = fileChooser.getSelectedFile();
+            try (FileWriter writer = new FileWriter(csvFile)) {
+                // Write headers
+                JSONObject firstRow = jsonArray.optJSONObject(0);
+                if (firstRow != null) {
+                    Iterator<String> keys = firstRow.keys();
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        writer.append(key);
+                        if (keys.hasNext()) {
+                            writer.append(",");
+                        }
+                    }
+                    writer.append("\n");
+                }
+
+                // Write data
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject row = jsonArray.optJSONObject(i);
+                    if (row != null) {
+                        Iterator<String> values = row.keys();
+                        while (values.hasNext()) {
+                            String value = row.optString(values.next(), "");
+                            writer.append(value);
+                            if (values.hasNext()) {
+                                writer.append(",");
+                            }
+                        }
+                        writer.append("\n");
+                    }
+                }
+
+                JOptionPane.showMessageDialog(this, "CSV file saved successfully", "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error saving CSV file", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
