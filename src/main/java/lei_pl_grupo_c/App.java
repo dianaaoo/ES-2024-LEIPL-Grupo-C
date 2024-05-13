@@ -80,18 +80,18 @@ public class App extends JFrame {
                 String[] headers = null;
                 while ((line = reader.readLine()) != null) {
                     if (headers == null) {
-                        headers = line.split(",");
+                        headers = line.split(";");
                     } else {
-                        String[] values = line.split(",");
+                        String[] values = line.split(";");
                         JSONObject jsonObject = new JSONObject();
-                        for (int i = 0; i < headers.length; i++) {
+                        for (int i = 0; i < headers.length && i < values.length; i++) {
                             jsonObject.put(headers[i], values[i]);
                         }
                         jsonArray.put(jsonObject);
                     }
                 }
                 reader.close();
-                // System.out.println(jsonArray.toString());
+                System.out.println(jsonArray.toString());
             } catch (IOException | JSONException ex) {
                 ex.printStackTrace();
             }
