@@ -4,7 +4,7 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class MyFxmlController {
+public class FXC {
     private String value = "Default value";
     public Label label1 = null;
     public Label label2 = null;
@@ -18,7 +18,7 @@ public class MyFxmlController {
     }
 
     public void initialize() {
-        System.out.println("Initialized MyFxmlController");
+        System.out.println("Initialized FXC");
     }
 
     public String getLabel1Text() {
