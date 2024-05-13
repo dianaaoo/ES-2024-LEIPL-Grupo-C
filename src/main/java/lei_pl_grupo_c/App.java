@@ -91,7 +91,7 @@ public class App extends JFrame {
                     }
                 }
                 reader.close();
-                System.out.println(jsonArray.toString());
+                // System.out.println(jsonArray.toString());
             } catch (IOException | JSONException ex) {
                 ex.printStackTrace();
             }
@@ -168,7 +168,7 @@ public class App extends JFrame {
                         String key = keys.next();
                         writer.append(key);
                         if (keys.hasNext()) {
-                            writer.append(",");
+                            writer.append(";");
                         }
                     }
                     writer.append("\n");
@@ -183,7 +183,7 @@ public class App extends JFrame {
                             String value = row.optString(values.next(), "");
                             writer.append(value);
                             if (values.hasNext()) {
-                                writer.append(",");
+                                writer.append(";");
                             }
                         }
                         writer.append("\n");
