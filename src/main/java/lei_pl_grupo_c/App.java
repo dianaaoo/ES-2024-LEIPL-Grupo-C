@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.nio.file.*;
+// import java.nio.file.*;
 import java.util.Iterator;
 import org.json.*;
 
@@ -91,11 +91,12 @@ public class App extends JFrame {
                     }
                 }
                 reader.close();
-                System.out.println(jsonArray.toString());
+                // System.out.println(jsonArray.toString());
             } catch (IOException | JSONException ex) {
                 ex.printStackTrace();
             }
         }
+        displayDataInHTML(jsonArray);
     }
 
     private void saveJsonFile() {
@@ -118,6 +119,7 @@ public class App extends JFrame {
                 JOptionPane.showMessageDialog(this, "Error saving JSON file", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+        displayDataInHTML(jsonArray);
     }
 
     private void readJsonFile() {
@@ -204,4 +206,53 @@ public class App extends JFrame {
             }
         });
     }
+
+    private String generateHTMLTable(JSONArray jsonArray) {
+        StringBuilder htmlBuilder = new StringBuilder();
+        htmlBuilder.append("<html>");
+        htmlBuilder.append("<head>");
+        htmlBuilder.append("<title>Schedule</title>");
+        htmlBuilder.append("</head>");
+        htmlBuilder.append("<body>");
+        htmlBuilder.append("<h1>Schedule</h1>");
+        htmlBuilder.append("<table border='1'>");
+
+        // Add table headers
+        JSONObject firstRow = jsonArray.optJSONObject(0);
+        if (firstRow != null) {
+            htmlBuilder.append("<tr>");
+            Iterator<String> keys = firstRow.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                htmlBuilder.append("<th>").append(key).append("</th>");
+            }
+            htmlBuilder.append("</tr>");
+        }
+
+        // Add table data
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject row = jsonArray.optJSONObject(i);
+            if (row != null) {
+                htmlBuilder.append("<tr>");
+                Iterator<String> values = row.keys();
+                while (values.hasNext()) {
+                    String value = row.optString(values.next(), "");
+                    htmlBuilder.append("<td>").append(value).append("</td>");
+                }
+                htmlBuilder.append("</tr>");
+            }
+        }
+
+        htmlBuilder.append("</table>");
+        htmlBuilder.append("</body>");
+        htmlBuilder.append("</html>");
+
+        return htmlBuilder.toString();
+    }
+
+    void displayDataInHTML(JSONArray jsonArray) {
+        String htmlTable = generateHTMLTable(jsonArray);
+        displayHTMLContent(htmlTable);
+    }
+
 }
