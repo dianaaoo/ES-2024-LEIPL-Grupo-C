@@ -6,16 +6,13 @@ import java.awt.event.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.Iterator;
-
 import org.json.*;
 
 public class App extends JFrame {
-
     private JButton readCsvButton;
     private JButton saveJsonButton;
     private JButton readJsonButton;
     private JButton saveCsvButton;
-
     private JSONArray jsonArray;
     private JEditorPane htmlPane;
 
@@ -200,30 +197,10 @@ public class App extends JFrame {
         }
     }
 
-    private void displayHTMLContent(String htmlContent) {
+    void displayHTMLContent(String htmlContent) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 htmlPane.setText(htmlContent);
-            }
-        });
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                App app = new App();
-                app.setVisible(true);
-
-                try {
-                    // Load HTML content from file
-                    Path htmlFilePath = Paths.get("table.html");
-                    String htmlContent = Files.readString(htmlFilePath);
-
-                    // Display HTML content
-                    app.displayHTMLContent(htmlContent);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         });
     }
