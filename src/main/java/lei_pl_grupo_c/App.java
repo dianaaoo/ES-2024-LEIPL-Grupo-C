@@ -28,19 +28,13 @@ public class App extends JFrame {
         upperPanel.setLayout(new FlowLayout());
 
         readCsvButton = new JButton("Read CSV");
-        saveCsvButton = new JButton("Save CSV");
         readJsonButton = new JButton("Read JSON");
+        saveCsvButton = new JButton("Save CSV");
         saveJsonButton = new JButton("Save JSON");
 
         readCsvButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 readCsvFile();
-            }
-        });
-
-        saveJsonButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                saveJsonFile();
             }
         });
 
@@ -53,6 +47,12 @@ public class App extends JFrame {
         saveCsvButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 saveCsvFile();
+            }
+        });
+
+        saveJsonButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveJsonFile();
             }
         });
 
