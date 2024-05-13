@@ -100,6 +100,10 @@ public class App {
     }
 
     public static void main(String[] args) {
-        new App().frame.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new App().frame.setVisible(true);
+            }
+        });
     }
 }
