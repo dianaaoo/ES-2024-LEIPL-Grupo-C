@@ -31,11 +31,9 @@ public class App {
         frame.setJMenuBar(menuBar);
 
         readCsvButton = new JButton("Read CSV");
-<<<<<<< HEAD
-=======
+
         saveCsvButton = new JButton("Save CSV");
         readJsonButton = new JButton("Read JSON");
->>>>>>> main
         saveJsonButton = new JButton("Save JSON");
 
         readCsvButton.addActionListener(new ActionListener() {
