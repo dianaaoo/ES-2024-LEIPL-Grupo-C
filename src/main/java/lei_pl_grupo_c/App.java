@@ -56,10 +56,9 @@ public class App extends JFrame {
             }
         });
 
+        upperPanel.add(readCsvButton);
         upperPanel.add(readJsonButton);
         upperPanel.add(saveCsvButton);
-
-        upperPanel.add(readCsvButton);
         upperPanel.add(saveJsonButton);
 
         add(upperPanel, BorderLayout.NORTH);
