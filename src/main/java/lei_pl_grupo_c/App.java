@@ -1,7 +1,6 @@
 package lei_pl_grupo_c;
 
 import javax.swing.*;
-<<<<<<< HEAD
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -18,15 +17,6 @@ public class App extends JFrame {
 
     private JSONArray jsonArray;
     private JEditorPane htmlPane;
-=======
-
-public class App {
-
-    private static final String HORARIO_CSV_EXAMPLE = "HorarioDeExemplo.csv";
-    private final JFrame frame;
-    private final JFileChooser fileChooser;
-    private List<ScheduleEntry> horario; // List to store Schedule entries
->>>>>>> parent of 7b7911c (Merge branch 'main' into LGC-44-Create-user-window-UI)
 
     public App() {
         super("Schedule");
@@ -36,40 +26,17 @@ public class App {
         JPanel upperPanel = new JPanel();
         upperPanel.setLayout(new FlowLayout());
 
-<<<<<<< HEAD
         readCsvButton = new JButton("Read CSV");
         saveCsvButton = new JButton("Save CSV");
         readJsonButton = new JButton("Read JSON");
         saveJsonButton = new JButton("Save JSON");
-=======
-        // Menu for File operations
-        JMenu fileMenu = new JMenu("Ficheiro");
-        menuBar.add(fileMenu);
-        JMenuItem loadScheduleMenuItem = new JMenuItem("Carregar Horário");
-        fileMenu.add(loadScheduleMenuItem);
-        loadScheduleMenuItem.addActionListener((ActionEvent e) -> loadSchedule());
-        JMenuItem saveScheduleMenuItem = new JMenuItem("Gravar Horário");
-        fileMenu.add(saveScheduleMenuItem);
-        saveScheduleMenuItem.addActionListener((ActionEvent e) -> saveSchedule());
-        // Menu for Schedule view and manipulation
-        JMenu ScheduleMenu = new JMenu("Horário");
-        menuBar.add(ScheduleMenu);
-        JMenuItem viewScheduleMenuItem = new JMenuItem("Visualizar Horário");
-        ScheduleMenu.add(viewScheduleMenuItem);
->>>>>>> parent of 7b7911c (Merge branch 'main' into LGC-44-Create-user-window-UI)
 
-        // Other menus for functionalities (implement similar structure)
-        // - Cadastro de Salas (Classrooms)
-        // - Sugerir Substituição (Suggest Substitution)
-        // - Sugerir Aulas UC (Suggest Course)
-        
-        // Button to open Schedule in web browser
-        JButton button = new JButton("Mostrar Salas no Browser Web");  
-        button.setBounds(20,20,250,50);     
-        button.addActionListener((ActionEvent e) -> openScheduleInBrowser());
-        frame.getContentPane().add(button);
+        readCsvButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                readCsvFile();
+            }
+        });
 
-<<<<<<< HEAD
         saveJsonButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 saveJsonFile();
@@ -109,16 +76,6 @@ public class App {
         int userSelection = fileChooser.showOpenDialog(this);
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File csvFile = fileChooser.getSelectedFile();
-=======
-        fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir"))); // Set default directory
-    }
-
-    private void loadSchedule() {
-        int returnValue = fileChooser.showOpenDialog(frame);
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
->>>>>>> parent of 7b7911c (Merge branch 'main' into LGC-44-Create-user-window-UI)
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(csvFile));
                 String line;
@@ -149,7 +106,6 @@ public class App {
             JOptionPane.showMessageDialog(this, "No data to save", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-<<<<<<< HEAD
 
         JFileChooser fileChooser = new JFileChooser(new File("files"));
         fileChooser.setDialogTitle("Save JSON File");
@@ -250,23 +206,6 @@ public class App {
                 htmlPane.setText(htmlContent);
             }
         });
-=======
-        // TODO Implement logic to display Schedule Pane
-    }
-
-    private void openScheduleInBrowser() {
-        if (horario == null) {
-            JOptionPane.showMessageDialog(frame, "Carregue o horário antes de abrir no navegador.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        // TODO Open Schedule file in web browser
-        try {
-            Desktop desk = Desktop.getDesktop(); 
-            desk.browse(new java.net.URI("file://" + System.getProperty("user.dir") + File.separator + HORARIO_CSV_EXAMPLE));
-        } catch (IOException | URISyntaxException e) {
-            JOptionPane.showMessageDialog(frame, "Erro ao abrir o horário no navegador: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
->>>>>>> parent of 7b7911c (Merge branch 'main' into LGC-44-Create-user-window-UI)
     }
 
     public static void main(String[] args) {
