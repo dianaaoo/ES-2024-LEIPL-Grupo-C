@@ -28,7 +28,7 @@ public class App extends JFrame {
 
         readCsvButton = new JButton("Read CSV");
         saveCsvButton = new JButton("Save CSV");
-
+        readJsonButton = new JButton("Read JSON");
         saveJsonButton = new JButton("Save JSON");
 
         readCsvButton.addActionListener(new ActionListener() {
