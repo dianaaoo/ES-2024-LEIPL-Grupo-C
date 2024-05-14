@@ -221,6 +221,8 @@ public class App extends JFrame {
                 String key = keys.next();
                 htmlBuilder.append("<th>").append(key).append("</th>");
             }
+            // Add the extra column
+            htmlBuilder.append("<th>1</th>");
             htmlBuilder.append("</tr>");
         }
 
@@ -233,6 +235,8 @@ public class App extends JFrame {
                     String value = row.optString(values.next(), "");
                     htmlBuilder.append("<td>").append(value).append("</td>");
                 }
+                // Add the value for the extra column
+                htmlBuilder.append("<td>testes</td>");
                 htmlBuilder.append("</tr>");
             }
         }
