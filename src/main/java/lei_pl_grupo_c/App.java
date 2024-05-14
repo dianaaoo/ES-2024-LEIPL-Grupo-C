@@ -51,13 +51,13 @@ public class App extends JFrame {
 
         readCsvButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                readCsvFile();
+                readCsvFileToMainWindow();
             }
         });
 
         readJsonButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                readJsonFile();
+                readJsonFileToMainWindow();
             }
         });
 
@@ -148,7 +148,7 @@ public class App extends JFrame {
         secondWindow.setVisible(true);
     }
 
-    private void readCsvFile() {
+    private void readCsvFileToMainWindow() {
         JFileChooser fileChooser = new JFileChooser(new File("files"));
         fileChooser.setDialogTitle("Choose CSV File");
         int userSelection = fileChooser.showOpenDialog(this);
@@ -202,7 +202,7 @@ public class App extends JFrame {
         displayDataInTable(jsonArray);
     }
 
-    private void readJsonFile() {
+    private void readJsonFileToMainWindow() {
         JFileChooser fileChooser = new JFileChooser(new File("files"));
         fileChooser.setDialogTitle("Choose JSON File");
         int userSelection = fileChooser.showOpenDialog(this);

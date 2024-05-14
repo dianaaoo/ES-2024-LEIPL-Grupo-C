@@ -107,7 +107,81 @@ public class SecondWindow extends JDialog {
         tableScrollPane = new JScrollPane(dataTable);
         add(tableScrollPane, BorderLayout.CENTER);
 
+        readCsvFileToSecondWindow();
+
         setLocationRelativeTo(parent); // Center the window relative to the parent frame
+    }
+
+    private void readCsvFileToSecondWindow() {
+        // Path to the CSV file
+        String filePath = "files/preset/CaracterizaçãoDasSalas.csv";
+        File csvFile = new File(filePath);
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(csvFile));
+            String line;
+            jsonArray = new JSONArray();
+            String[] headers = null;
+            while ((line = reader.readLine()) != null) {
+                if (headers == null) {
+                    headers = line.split(";");
+                } else {
+                    String[] values = line.split(";");
+                    if (values.length == headers.length) {
+                        JSONObject jsonObject = new JSONObject();
+                        for (int i = 0; i < headers.length && i < values.length; i++) {
+                            jsonObject.put(headers[i], values[i]);
+                        }
+                        jsonArray.put(jsonObject);
+                    } else {
+                        // Handle case where the number of values doesn't match the number of headers
+                        System.err.println("Number of values doesn't match the number of headers: " + line);
+                    }
+                }
+            }
+            reader.close();
+        } catch (IOException | JSONException ex) {
+            ex.printStackTrace();
+        }
+
+        displayDataInTable(jsonArray);
+    }
+
+    private void displayDataInTable(JSONArray jsonArray) {
+        DefaultTableModel model = new DefaultTableModel();
+
+        // Add other existing columns
+        JSONObject firstRow = jsonArray.optJSONObject(0);
+        if (firstRow != null) {
+            for (String key : firstRow.keySet()) {
+                if (!key.equals("1") && !key.equals("2")) { // Exclude columns 1 and 2
+                    model.addColumn(key);
+                }
+            }
+        }
+
+        // Add data rows
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject row = jsonArray.optJSONObject(i);
+            if (row != null) {
+                Object[] rowData = new Object[model.getColumnCount()];
+                int j = 0;
+                // Add data for other existing columns
+                for (String key : row.keySet()) {
+                    if (!key.equals("1") && !key.equals("2")) { // Exclude columns 1 and 2
+                        rowData[j++] = row.get(key);
+                    }
+                }
+                model.addRow(rowData);
+            }
+        }
+
+        // Set the table model
+        dataTable.setModel(model);
+
+        // Enable sorting
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        dataTable.setRowSorter(sorter);
     }
 
     private void sortTableBySelectedColumn() {
