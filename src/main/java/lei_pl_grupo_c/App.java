@@ -4,9 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-// import java.nio.file.*;
 import java.util.Iterator;
 import org.json.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class App extends JFrame {
     private JButton readCsvButton;
@@ -91,7 +95,6 @@ public class App extends JFrame {
                     }
                 }
                 reader.close();
-                // System.out.println(jsonArray.toString());
             } catch (IOException | JSONException ex) {
                 ex.printStackTrace();
             }
@@ -160,7 +163,6 @@ public class App extends JFrame {
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File csvFile = fileChooser.getSelectedFile();
             try (FileWriter writer = new FileWriter(csvFile)) {
-                // Write headers
                 JSONObject firstRow = jsonArray.optJSONObject(0);
                 if (firstRow != null) {
                     Iterator<String> keys = firstRow.keys();
@@ -174,7 +176,6 @@ public class App extends JFrame {
                     writer.append("\n");
                 }
 
-                // Write data
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject row = jsonArray.optJSONObject(i);
                     if (row != null) {
@@ -217,27 +218,42 @@ public class App extends JFrame {
         htmlBuilder.append("<h1>Schedule</h1>");
         htmlBuilder.append("<table border='1'>");
 
-        // Add table headers
+        // Add the extra columns headers
+        htmlBuilder.append("<tr>");
+        htmlBuilder.append("<th>Semana do ano</th>");
+        htmlBuilder.append("<th>Semana do semestre</th>");
         JSONObject firstRow = jsonArray.optJSONObject(0);
         if (firstRow != null) {
-            htmlBuilder.append("<tr>");
             Iterator<String> keys = firstRow.keys();
             while (keys.hasNext()) {
                 String key = keys.next();
-                htmlBuilder.append("<th>").append(key).append("</th>");
+                if (!key.equals("1") && !key.equals("2")) { // Exclude columns 1 and 2
+                    htmlBuilder.append("<th>").append(key).append("</th>");
+                }
             }
-            htmlBuilder.append("</tr>");
         }
+        htmlBuilder.append("</tr>");
 
-        // Add table data
+        // Add the data rows with values for the extra columns
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject row = jsonArray.optJSONObject(i);
             if (row != null) {
                 htmlBuilder.append("<tr>");
+                // Calculate week's number based on class date for "Semana do ano"
+                String classDateStr = row.optString("Data da aula", "");
+                int weekOfYear = calculateWeekOfYear(classDateStr, "02/09/2022");
+                htmlBuilder.append("<td>").append(weekOfYear).append("</td>");
+                // Calculate week's number based on class date for "Semana do semestre"
+                int weekOfSemester = calculateWeekOfYear(classDateStr, "01/02/2023");
+                htmlBuilder.append("<td>").append(weekOfSemester).append("</td>");
+                // Add values for the existing columns excluding columns 1 and 2
                 Iterator<String> values = row.keys();
                 while (values.hasNext()) {
-                    String value = row.optString(values.next(), "");
-                    htmlBuilder.append("<td>").append(value).append("</td>");
+                    String key = values.next();
+                    if (!key.equals("1") && !key.equals("2")) { // Exclude columns 1 and 2
+                        String value = row.optString(key, "");
+                        htmlBuilder.append("<td>").append(value).append("</td>");
+                    }
                 }
                 htmlBuilder.append("</tr>");
             }
@@ -250,9 +266,45 @@ public class App extends JFrame {
         return htmlBuilder.toString();
     }
 
+    private int calculateWeekOfYear(String dateString, String referenceDateString) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date date = sdf.parse(dateString);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            Date referenceDate = sdf.parse(referenceDateString);
+            Calendar referenceCalendar = Calendar.getInstance();
+            referenceCalendar.setTime(referenceDate);
+
+            // Calculate the difference in weeks
+            long diffInMillis = calendar.getTimeInMillis() - referenceCalendar.getTimeInMillis();
+            int weeksDiff = (int) (diffInMillis / (1000 * 60 * 60 * 24 * 7));
+
+            // Check if the week is before the reset date
+            if (weeksDiff < 0) {
+                // Use the week count from the "Semana do ano" column
+                return calculateWeekOfYear(dateString, "02/09/2022");
+            } else {
+                // Adjust to start from week 1
+                return weeksDiff + 1;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0; // Error occurred, return 0
+        }
+    }
+
     void displayDataInHTML(JSONArray jsonArray) {
         String htmlTable = generateHTMLTable(jsonArray);
         displayHTMLContent(htmlTable);
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new App().setVisible(true);
+            }
+        });
+    }
 }
