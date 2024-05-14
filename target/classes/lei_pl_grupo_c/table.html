@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <link href="https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js"></script>
+    <script type="text/javascript">
+        function loadCSVWithCustomDelimiter(url, delimiter) {
+            $.get(url, function (csvData) {
+                var parsedData = Papa.parse(csvData, {
+                    delimiter: ";",
+                    header: true
+                }).data;
+                loadDataIntoTable(parsedData);
+            });
+        }
+
+        function loadDataIntoTable(data) {
+            var table = new Tabulator("#example-table", {
+                data: data,
+                layout: "fitDatafill",
+                pagination: "local",
+                paginationSize: 10,
+                paginationSizeSelector: [5, 10, 20, 40],
+                movableColumns: true,
+                paginationCounter: "rows",
+                initialSort: [{ column: "building", dir: "asc" }],
+                columns: [
+                    { title: "Descrição do Tipo de Sala", field: "classroomtypedescription", headerFilter: "input" },
+                    { title: "Quantidade", field: "amountofclassroomsofthistype", headerFilter: "input" },
+                    { title: "IDs das Salas", field: "classroomsids", headerFilter: "input" },
+                ]
+            });
+        }
+
+        // Function to handle file input change event
+        function loadCSVWithCustomDelimiter(url) {
+            $.get(url, function (csvData) {
+                var parsedData = Papa.parse(csvData, {
+                    delimiter: ";",
+                    header: true
+                }).data;
+                loadDataIntoTable(parsedData);
+            });
+        }
+
+
+
+        // Attach event listener to file input element
+        document.getElementById('fileInput').addEventListener('change', handleFileInputChange);
+
+        // Initial load of CSV data with default delimiter ','
+        loadCSVWithCustomDelimiter("new.csv", ";");
+    </script>
+</head>
+
+<body>
+    <h1>Tipos de Salas de Aula</h1>
+    <input type="file" id="fileInput" accept=".csv">
+    <div id="example-table"></div>
+</body>
+
+</html>
