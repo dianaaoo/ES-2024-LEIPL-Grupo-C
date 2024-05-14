@@ -203,35 +203,6 @@ public class App extends JFrame {
         });
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     private String generateHTMLTable(JSONArray jsonArray) {
         StringBuilder htmlBuilder = new StringBuilder();
         htmlBuilder.append("<html>");
@@ -242,32 +213,34 @@ public class App extends JFrame {
         htmlBuilder.append("<h1>Schedule</h1>");
         htmlBuilder.append("<table border='1'>");
 
+        // Add the extra columns headers
+        htmlBuilder.append("<tr>");
+        htmlBuilder.append("<th>1</th>");
+        htmlBuilder.append("<th>2</th>");
         JSONObject firstRow = jsonArray.optJSONObject(0);
         if (firstRow != null) {
-            htmlBuilder.append("<tr>");
             Iterator<String> keys = firstRow.keys();
             while (keys.hasNext()) {
                 String key = keys.next();
                 htmlBuilder.append("<th>").append(key).append("</th>");
             }
-            // Add the extra columns
-            htmlBuilder.append("<th>1</th>");
-            htmlBuilder.append("<th>2</th>");
-            htmlBuilder.append("</tr>");
         }
+        htmlBuilder.append("</tr>");
 
+        // Add the data rows with values for the extra columns
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject row = jsonArray.optJSONObject(i);
             if (row != null) {
                 htmlBuilder.append("<tr>");
+                // Add values for the extra columns
+                htmlBuilder.append("<td>testes</td>");
+                htmlBuilder.append("<td>8</td>");
+                // Add values for the existing columns
                 Iterator<String> values = row.keys();
                 while (values.hasNext()) {
                     String value = row.optString(values.next(), "");
                     htmlBuilder.append("<td>").append(value).append("</td>");
                 }
-                // Add the values for the extra columns
-                htmlBuilder.append("<td>testes</td>");
-                htmlBuilder.append("<td>8</td>");
                 htmlBuilder.append("</tr>");
             }
         }
@@ -278,32 +251,6 @@ public class App extends JFrame {
 
         return htmlBuilder.toString();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     void displayDataInHTML(JSONArray jsonArray) {
         String htmlTable = generateHTMLTable(jsonArray);
