@@ -215,14 +215,16 @@ public class App extends JFrame {
 
         // Add the extra columns headers
         htmlBuilder.append("<tr>");
-        htmlBuilder.append("<th>1</th>");
-        htmlBuilder.append("<th>2</th>");
+        htmlBuilder.append("<th>Semana do ano</th>"); // Renamed column 1
+        htmlBuilder.append("<th>Semana do semestre</th>"); // Renamed column 2
         JSONObject firstRow = jsonArray.optJSONObject(0);
         if (firstRow != null) {
             Iterator<String> keys = firstRow.keys();
             while (keys.hasNext()) {
                 String key = keys.next();
-                htmlBuilder.append("<th>").append(key).append("</th>");
+                if (!key.equals("1") && !key.equals("2")) { // Exclude columns 1 and 2
+                    htmlBuilder.append("<th>").append(key).append("</th>");
+                }
             }
         }
         htmlBuilder.append("</tr>");
@@ -233,13 +235,16 @@ public class App extends JFrame {
             if (row != null) {
                 htmlBuilder.append("<tr>");
                 // Add values for the extra columns
-                htmlBuilder.append("<td>testes</td>");
-                htmlBuilder.append("<td>8</td>");
-                // Add values for the existing columns
+                htmlBuilder.append("<td>testes</td>"); // Sample data for "Semana do ano"
+                htmlBuilder.append("<td>8</td>"); // Sample data for "Semana do semestre"
+                // Add values for the existing columns excluding columns 1 and 2
                 Iterator<String> values = row.keys();
                 while (values.hasNext()) {
-                    String value = row.optString(values.next(), "");
-                    htmlBuilder.append("<td>").append(value).append("</td>");
+                    String key = values.next();
+                    if (!key.equals("1") && !key.equals("2")) { // Exclude columns 1 and 2
+                        String value = row.optString(key, "");
+                        htmlBuilder.append("<td>").append(value).append("</td>");
+                    }
                 }
                 htmlBuilder.append("</tr>");
             }
