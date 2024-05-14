@@ -12,14 +12,7 @@ public class Main {
             try {
                 App app = new App();
                 app.setVisible(true);
-
-                // Load HTML content from file
-                Path htmlFilePath = Paths.get("src", "main", "java", "lei_pl_grupo_c", "table.html");
-                String htmlContent = Files.readString(htmlFilePath);
-
-                // Display HTML content
-                app.displayHTMLContent(htmlContent);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         });
