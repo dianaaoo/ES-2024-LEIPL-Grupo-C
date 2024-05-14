@@ -203,6 +203,35 @@ public class App extends JFrame {
         });
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     private String generateHTMLTable(JSONArray jsonArray) {
         StringBuilder htmlBuilder = new StringBuilder();
         htmlBuilder.append("<html>");
@@ -221,8 +250,9 @@ public class App extends JFrame {
                 String key = keys.next();
                 htmlBuilder.append("<th>").append(key).append("</th>");
             }
-            // Add the extra column
+            // Add the extra columns
             htmlBuilder.append("<th>1</th>");
+            htmlBuilder.append("<th>2</th>");
             htmlBuilder.append("</tr>");
         }
 
@@ -235,8 +265,9 @@ public class App extends JFrame {
                     String value = row.optString(values.next(), "");
                     htmlBuilder.append("<td>").append(value).append("</td>");
                 }
-                // Add the value for the extra column
+                // Add the values for the extra columns
                 htmlBuilder.append("<td>testes</td>");
+                htmlBuilder.append("<td>8</td>");
                 htmlBuilder.append("</tr>");
             }
         }
@@ -247,6 +278,32 @@ public class App extends JFrame {
 
         return htmlBuilder.toString();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     void displayDataInHTML(JSONArray jsonArray) {
         String htmlTable = generateHTMLTable(jsonArray);
