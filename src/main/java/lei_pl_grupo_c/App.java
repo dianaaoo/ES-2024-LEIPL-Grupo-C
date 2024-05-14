@@ -16,8 +16,6 @@ import java.util.Iterator;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
-import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 import java.util.regex.PatternSyntaxException;
 
@@ -90,8 +88,20 @@ public class App extends JFrame {
         bottomPanel.setLayout(new FlowLayout());
 
         sortColumnComboBox = new JComboBox<>();
-        sortColumnComboBox.addItem("Semana do ano"); // Add columns for sorting
+        sortColumnComboBox.addItem("Semana do ano");
         sortColumnComboBox.addItem("Semana do semestre");
+        sortColumnComboBox.addItem("Curso");
+        sortColumnComboBox.addItem("Unidade Curricular");
+        sortColumnComboBox.addItem("Turno");
+        sortColumnComboBox.addItem("Turma");
+        sortColumnComboBox.addItem("Inscritos no turno");
+        sortColumnComboBox.addItem("Dia da semana");
+        sortColumnComboBox.addItem("Hora início da aula");
+        sortColumnComboBox.addItem("Hora fim da aula");
+        sortColumnComboBox.addItem("Data da aula");
+        sortColumnComboBox.addItem("Características da sala pedida para a aula");
+        sortColumnComboBox.addItem("Sala atribuída à aula");
+
 
         sortButton = new JButton("Sort");
         sortButton.addActionListener(new ActionListener() {
@@ -256,24 +266,37 @@ public class App extends JFrame {
 
     private void sortTableBySelectedColumn() {
         String selectedColumn = (String) sortColumnComboBox.getSelectedItem();
-        if (selectedColumn.equals("Semana do ano")) {
-            // Sort the table by "Semana do ano" column
-            sortTableByColumn("Semana do ano");
-        } else if (selectedColumn.equals("Semana do semestre")) {
-            // Sort the table by "Semana do semestre" column
-            sortTableByColumn("Semana do semestre");
+        int columnIndex = getColumnIndex(selectedColumn);
+        if (columnIndex != -1) {
+            sortTableByColumn(columnIndex);
         }
     }
 
-    private void sortTableByColumn(String columnName) {
+    private void sortTableByColumn(int columnIndex) {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
         sorter.setSortable(dataTable.getColumnCount() - 1, false); // Disable sorting for last column
         dataTable.setRowSorter(sorter);
 
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-        sortKeys.add(new RowSorter.SortKey(getColumnIndex(columnName), SortOrder.ASCENDING));
-        sorter.setSortKeys(sortKeys);
-        sorter.sort();
+        // Get the current sort keys
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>(sorter.getSortKeys());
+
+        // Check if the selected column is already sorted
+        boolean sorted = false;
+        for (RowSorter.SortKey sortKey : sortKeys) {
+            if (sortKey.getColumn() == columnIndex) {
+                // Toggle sorting order
+                sorter.setSortKeys(null);
+                sorted = true;
+                break;
+            }
+        }
+
+        // If the column is not already sorted, sort it in ascending order
+        if (!sorted) {
+            sortKeys.clear();
+            sortKeys.add(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING));
+            sorter.setSortKeys(sortKeys);
+        }
     }
 
     private int getColumnIndex(String columnName) {
