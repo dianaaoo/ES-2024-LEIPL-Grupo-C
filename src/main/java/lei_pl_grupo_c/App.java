@@ -17,6 +17,10 @@ import java.util.Iterator;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
+import javax.swing.RowFilter;
+import javax.swing.table.TableRowSorter;
+import java.util.regex.PatternSyntaxException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,9 @@ public class App extends JFrame {
     private JScrollPane tableScrollPane;
     private JComboBox<String> sortColumnComboBox;
     private JButton sortButton;
+    private JButton filterButton;
+    private JLabel filterLabel;
+    private JTextField filterTextField;
 
     public App() {
         super("Schedule");
@@ -95,6 +102,24 @@ public class App extends JFrame {
 
         bottomPanel.add(sortColumnComboBox);
         bottomPanel.add(sortButton);
+
+        // Create filter components
+        filterButton = new JButton("Filter");
+        filterLabel = new JLabel("Filter by: ");
+        filterTextField = new JTextField(20);
+
+        // Add action listener for filter button
+        filterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                filterTable();
+            }
+        });
+
+        // Add filter components to upperPanel
+        upperPanel.add(filterLabel);
+        upperPanel.add(filterTextField);
+        upperPanel.add(filterButton);
 
         add(bottomPanel, BorderLayout.SOUTH);
     }
@@ -313,15 +338,15 @@ public class App extends JFrame {
             Date date = sdf.parse(dateString);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-    
+
             Date referenceDate = sdf.parse(referenceDateString);
             Calendar referenceCalendar = Calendar.getInstance();
             referenceCalendar.setTime(referenceDate);
-    
+
             // Calculate the difference in weeks
             long diffInMillis = calendar.getTimeInMillis() - referenceCalendar.getTimeInMillis();
             int weeksDiff = (int) (diffInMillis / (1000 * 60 * 60 * 24 * 7));
-    
+
             // Check if the week is before the reset date
             if (weeksDiff < 0) {
                 // Use the week count from the "Semana do ano" column
@@ -335,7 +360,30 @@ public class App extends JFrame {
             return 0; // Error occurred, return 0
         }
     }
-    
+
+    private void filterTable() {
+        // Get the text entered in the filter text field
+        String filterText = filterTextField.getText().trim();
+
+        // If the filter text is empty, reset the table to display all rows
+        if (filterText.isEmpty()) {
+            ((DefaultRowSorter) dataTable.getRowSorter()).setRowFilter(null);
+            return;
+        }
+
+        // Create a RowFilter to filter rows based on the filter text
+        RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter(filterText);
+
+        // Apply the RowFilter to the TableRowSorter of the table
+        try {
+            ((DefaultRowSorter) dataTable.getRowSorter()).setRowFilter(rowFilter);
+        } catch (PatternSyntaxException ex) {
+            // If the filter text is not a valid regex pattern, ignore the filter
+            // You can handle this case based on your requirements
+            System.err.println("Invalid regex pattern for filtering: " + ex.getMessage());
+        }
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
