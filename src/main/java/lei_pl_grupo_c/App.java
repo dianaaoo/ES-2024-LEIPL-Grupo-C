@@ -239,12 +239,13 @@ public class App extends JFrame {
             JSONObject row = jsonArray.optJSONObject(i);
             if (row != null) {
                 htmlBuilder.append("<tr>");
-                // Calculate week's number based on class date
+                // Calculate week's number based on class date for "Semana do ano"
                 String classDateStr = row.optString("Data da aula", "");
-                int weekOfYear = calculateWeekOfYear(classDateStr);
+                int weekOfYear = calculateWeekOfYear(classDateStr, "02/09/2022");
                 htmlBuilder.append("<td>").append(weekOfYear).append("</td>");
-                // Add placeholder value for "Semana do semestre"
-                htmlBuilder.append("<td>Placeholder</td>");
+                // Calculate week's number based on class date for "Semana do semestre"
+                int weekOfSemester = calculateWeekOfYear(classDateStr, "01/02/2023");
+                htmlBuilder.append("<td>").append(weekOfSemester).append("</td>");
                 // Add values for the existing columns excluding columns 1 and 2
                 Iterator<String> values = row.keys();
                 while (values.hasNext()) {
@@ -265,20 +266,29 @@ public class App extends JFrame {
         return htmlBuilder.toString();
     }
 
-    private int calculateWeekOfYear(String dateString) {
+    private int calculateWeekOfYear(String dateString, String referenceDateString) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         try {
             Date date = sdf.parse(dateString);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            // Set the reference date (02/09/2022 - 03/09/2022)
-            Calendar referenceDate = Calendar.getInstance();
-            referenceDate.set(2022, Calendar.SEPTEMBER, 2);
+
+            Date referenceDate = sdf.parse(referenceDateString);
+            Calendar referenceCalendar = Calendar.getInstance();
+            referenceCalendar.setTime(referenceDate);
+
             // Calculate the difference in weeks
-            long diffInMillis = calendar.getTimeInMillis() - referenceDate.getTimeInMillis();
+            long diffInMillis = calendar.getTimeInMillis() - referenceCalendar.getTimeInMillis();
             int weeksDiff = (int) (diffInMillis / (1000 * 60 * 60 * 24 * 7));
-            // Adjust to start from week 1
-            return weeksDiff + 1;
+
+            // Check if the week is before the reset date
+            if (weeksDiff < 0) {
+                // Use the week count from the "Semana do ano" column
+                return calculateWeekOfYear(dateString, "02/09/2022");
+            } else {
+                // Adjust to start from week 1
+                return weeksDiff + 1;
+            }
         } catch (ParseException e) {
             e.printStackTrace();
             return 0; // Error occurred, return 0
