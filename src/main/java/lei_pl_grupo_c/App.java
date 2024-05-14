@@ -7,6 +7,11 @@ import java.io.*;
 import java.util.Iterator;
 import org.json.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class App extends JFrame {
     private JButton readCsvButton;
     private JButton saveJsonButton;
@@ -215,8 +220,8 @@ public class App extends JFrame {
 
         // Add the extra columns headers
         htmlBuilder.append("<tr>");
-        htmlBuilder.append("<th>Semana do ano</th>"); // Renamed column 1
-        htmlBuilder.append("<th>Semana do semestre</th>"); // Renamed column 2
+        htmlBuilder.append("<th>Semana do ano</th>");
+        htmlBuilder.append("<th>Semana do semestre</th>");
         JSONObject firstRow = jsonArray.optJSONObject(0);
         if (firstRow != null) {
             Iterator<String> keys = firstRow.keys();
@@ -234,9 +239,12 @@ public class App extends JFrame {
             JSONObject row = jsonArray.optJSONObject(i);
             if (row != null) {
                 htmlBuilder.append("<tr>");
-                // Add values for the extra columns
-                htmlBuilder.append("<td>testes</td>"); // Sample data for "Semana do ano"
-                htmlBuilder.append("<td>8</td>"); // Sample data for "Semana do semestre"
+                // Calculate week's number based on class date
+                String classDateStr = row.optString("Data da aula", "");
+                int weekOfYear = calculateWeekOfYear(classDateStr);
+                htmlBuilder.append("<td>").append(weekOfYear).append("</td>");
+                // Add placeholder value for "Semana do semestre"
+                htmlBuilder.append("<td>Placeholder</td>");
                 // Add values for the existing columns excluding columns 1 and 2
                 Iterator<String> values = row.keys();
                 while (values.hasNext()) {
@@ -255,6 +263,26 @@ public class App extends JFrame {
         htmlBuilder.append("</html>");
 
         return htmlBuilder.toString();
+    }
+
+    private int calculateWeekOfYear(String dateString) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date date = sdf.parse(dateString);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            // Set the reference date (02/09/2022 - 03/09/2022)
+            Calendar referenceDate = Calendar.getInstance();
+            referenceDate.set(2022, Calendar.SEPTEMBER, 2);
+            // Calculate the difference in weeks
+            long diffInMillis = calendar.getTimeInMillis() - referenceDate.getTimeInMillis();
+            int weeksDiff = (int) (diffInMillis / (1000 * 60 * 60 * 24 * 7));
+            // Adjust to start from week 1
+            return weeksDiff + 1;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0; // Error occurred, return 0
+        }
     }
 
     void displayDataInHTML(JSONArray jsonArray) {
