@@ -51,13 +51,13 @@ public class App extends JFrame {
 
         readCsvButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                readCsvFile();
+                readCsvFileToMainWindow();
             }
         });
 
         readJsonButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                readJsonFile();
+                readJsonFileToMainWindow();
             }
         });
 
@@ -102,7 +102,6 @@ public class App extends JFrame {
         sortColumnComboBox.addItem("Características da sala pedida para a aula");
         sortColumnComboBox.addItem("Sala atribuída à aula");
 
-
         sortButton = new JButton("Sort");
         sortButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -131,10 +130,25 @@ public class App extends JFrame {
         upperPanel.add(filterTextField);
         upperPanel.add(filterButton);
 
+        // Create a button to open the second window
+        JButton openSecondWindowButton = new JButton("Ver caracterização das salas");
+        openSecondWindowButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                openSecondWindow();
+            }
+        });
+
+        bottomPanel.add(openSecondWindowButton);
+
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    private void readCsvFile() {
+    private void openSecondWindow() {
+        SecondWindow secondWindow = new SecondWindow(this);
+        secondWindow.setVisible(true);
+    }
+
+    private void readCsvFileToMainWindow() {
         JFileChooser fileChooser = new JFileChooser(new File("files"));
         fileChooser.setDialogTitle("Choose CSV File");
         int userSelection = fileChooser.showOpenDialog(this);
@@ -188,7 +202,7 @@ public class App extends JFrame {
         displayDataInTable(jsonArray);
     }
 
-    private void readJsonFile() {
+    private void readJsonFileToMainWindow() {
         JFileChooser fileChooser = new JFileChooser(new File("files"));
         fileChooser.setDialogTitle("Choose JSON File");
         int userSelection = fileChooser.showOpenDialog(this);
