@@ -90,7 +90,6 @@ public class App extends JFrame {
                     }
                 }
                 reader.close();
-                // System.out.println(jsonArray.toString());
             } catch (IOException | JSONException ex) {
                 ex.printStackTrace();
             }
@@ -159,7 +158,6 @@ public class App extends JFrame {
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             File csvFile = fileChooser.getSelectedFile();
             try (FileWriter writer = new FileWriter(csvFile)) {
-                // Write headers
                 JSONObject firstRow = jsonArray.optJSONObject(0);
                 if (firstRow != null) {
                     Iterator<String> keys = firstRow.keys();
@@ -173,7 +171,6 @@ public class App extends JFrame {
                     writer.append("\n");
                 }
 
-                // Write data
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject row = jsonArray.optJSONObject(i);
                     if (row != null) {
@@ -216,7 +213,6 @@ public class App extends JFrame {
         htmlBuilder.append("<h1>Schedule</h1>");
         htmlBuilder.append("<table border='1'>");
 
-        // Add table headers
         JSONObject firstRow = jsonArray.optJSONObject(0);
         if (firstRow != null) {
             htmlBuilder.append("<tr>");
@@ -228,7 +224,6 @@ public class App extends JFrame {
             htmlBuilder.append("</tr>");
         }
 
-        // Add table data
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject row = jsonArray.optJSONObject(i);
             if (row != null) {
@@ -254,4 +249,11 @@ public class App extends JFrame {
         displayHTMLContent(htmlTable);
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new App().setVisible(true);
+            }
+        });
+    }
 }
