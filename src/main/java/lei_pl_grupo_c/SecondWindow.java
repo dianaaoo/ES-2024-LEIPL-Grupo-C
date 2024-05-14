@@ -20,6 +20,11 @@ import java.util.regex.PatternSyntaxException;
 
 import java.util.Arrays;
 
+/**
+ * second window of the application, used to display the room characterization
+ * also sorts and filters the data it shows
+ */
+
 public class SecondWindow extends JDialog {
     private JSONArray jsonArray;
     private JTable dataTable;

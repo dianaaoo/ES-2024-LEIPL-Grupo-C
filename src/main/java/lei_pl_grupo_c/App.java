@@ -22,6 +22,14 @@ import java.util.regex.PatternSyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * main class for the application
+ * extends JFrame and serves as GUI
+ * reads and displays data from CSV and JSON files
+ * saves data to CSV and JSON files
+ * allows sorting and filtering of data displayed
+ */
+
 public class App extends JFrame {
     private JButton readCsvButton;
     private JButton saveJsonButton;
@@ -435,5 +443,5 @@ public class App extends JFrame {
     public JSONArray getJsonArray() {
         return this.jsonArray;
     }
-    
+
 }
