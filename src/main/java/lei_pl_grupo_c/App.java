@@ -3,6 +3,7 @@ package lei_pl_grupo_c;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+
 import org.json.*;
 
 import java.awt.*;
@@ -14,13 +15,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-import javax.swing.table.TableRowSorter;
 import java.util.regex.PatternSyntaxException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class App extends JFrame {
     private JButton readCsvButton;
@@ -39,7 +39,7 @@ public class App extends JFrame {
     public App() {
         super("Schedule");
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JPanel upperPanel = new JPanel();
         upperPanel.setLayout(new FlowLayout());
@@ -49,29 +49,10 @@ public class App extends JFrame {
         saveCsvButton = new JButton("Save CSV");
         saveJsonButton = new JButton("Save JSON");
 
-        readCsvButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                readCsvFileToMainWindow();
-            }
-        });
-
-        readJsonButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                readJsonFileToMainWindow();
-            }
-        });
-
-        saveCsvButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                saveCsvFile();
-            }
-        });
-
-        saveJsonButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                saveJsonFile();
-            }
-        });
+        readCsvButton.addActionListener(e -> readCsvFileToMainWindow());
+        readJsonButton.addActionListener(e -> readJsonFileToMainWindow());
+        saveCsvButton.addActionListener(e -> saveCsvFile());
+        saveJsonButton.addActionListener(e -> saveJsonFile());
 
         upperPanel.add(readCsvButton);
         upperPanel.add(readJsonButton);
@@ -103,11 +84,7 @@ public class App extends JFrame {
         sortColumnComboBox.addItem("Sala atribuída à aula");
 
         sortButton = new JButton("Sort");
-        sortButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sortTableBySelectedColumn();
-            }
-        });
+        sortButton.addActionListener(e -> sortTableBySelectedColumn());
 
         bottomPanel.add(sortColumnComboBox);
         bottomPanel.add(sortButton);
@@ -118,12 +95,7 @@ public class App extends JFrame {
         filterTextField = new JTextField(20);
 
         // Add action listener for filter button
-        filterButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                filterTable();
-            }
-        });
+        filterButton.addActionListener(e -> filterTable());
 
         // Add filter components to upperPanel
         upperPanel.add(filterLabel);
@@ -132,11 +104,7 @@ public class App extends JFrame {
 
         // Create a button to open the second window
         JButton openSecondWindowButton = new JButton("Ver caracterização das salas");
-        openSecondWindowButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                openSecondWindow();
-            }
-        });
+        openSecondWindowButton.addActionListener(e -> openSecondWindow());
 
         bottomPanel.add(openSecondWindowButton);
 
@@ -192,8 +160,7 @@ public class App extends JFrame {
             File jsonFile = fileChooser.getSelectedFile();
             try (FileWriter writer = new FileWriter(jsonFile)) {
                 jsonArray.write(writer);
-                JOptionPane.showMessageDialog(this, "JSON file saved successfully", "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "JSON file saved successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error saving JSON file", "Error", JOptionPane.ERROR_MESSAGE);
@@ -219,11 +186,12 @@ public class App extends JFrame {
 
                 jsonArray = new JSONArray(jsonContent.toString());
 
-                JOptionPane.showMessageDialog(this, "JSON file read successfully", "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(
+                        this, "JSON file read successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException | JSONException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error reading JSON file", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(
+                        this, "Error reading JSON file", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         displayDataInTable(jsonArray);
@@ -269,8 +237,7 @@ public class App extends JFrame {
                     }
                 }
 
-                JOptionPane.showMessageDialog(this, "CSV file saved successfully", "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "CSV file saved successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error saving CSV file", "Error", JOptionPane.ERROR_MESSAGE);
@@ -287,30 +254,7 @@ public class App extends JFrame {
     }
 
     private void sortTableByColumn(int columnIndex) {
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
-        sorter.setSortable(dataTable.getColumnCount() - 1, false); // Disable sorting for last column
-        dataTable.setRowSorter(sorter);
-
-        // Get the current sort keys
-        List<RowSorter.SortKey> sortKeys = new ArrayList<>(sorter.getSortKeys());
-
-        // Check if the selected column is already sorted
-        boolean sorted = false;
-        for (RowSorter.SortKey sortKey : sortKeys) {
-            if (sortKey.getColumn() == columnIndex) {
-                // Toggle sorting order
-                sorter.setSortKeys(null);
-                sorted = true;
-                break;
-            }
-        }
-
-        // If the column is not already sorted, sort it in ascending order
-        if (!sorted) {
-            sortKeys.clear();
-            sortKeys.add(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING));
-            sorter.setSortKeys(sortKeys);
-        }
+        SecondWindow.TableRowSorter(columnIndex, dataTable);
     }
 
     private int getColumnIndex(String columnName) {
@@ -400,25 +344,7 @@ public class App extends JFrame {
 
     private void filterTable() {
         // Get the text entered in the filter text field
-        String filterText = filterTextField.getText().trim();
-
-        // If the filter text is empty, reset the table to display all rows
-        if (filterText.isEmpty()) {
-            ((DefaultRowSorter) dataTable.getRowSorter()).setRowFilter(null);
-            return;
-        }
-
-        // Create a RowFilter to filter rows based on the filter text
-        RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter(filterText);
-
-        // Apply the RowFilter to the TableRowSorter of the table
-        try {
-            ((DefaultRowSorter) dataTable.getRowSorter()).setRowFilter(rowFilter);
-        } catch (PatternSyntaxException ex) {
-            // If the filter text is not a valid regex pattern, ignore the filter
-            // You can handle this case based on your requirements
-            System.err.println("Invalid regex pattern for filtering: " + ex.getMessage());
-        }
+        SecondWindow.filterText(filterTextField, dataTable);
     }
 
     public static void main(String[] args) {

@@ -1,19 +1,20 @@
 package lei_pl_grupo_c;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import org.json.*;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import java.util.regex.PatternSyntaxException;
@@ -22,13 +23,9 @@ import java.util.Arrays;
 
 public class SecondWindow extends JDialog {
     private JSONArray jsonArray;
-    private JTable dataTable;
-    private JScrollPane tableScrollPane;
-    private JComboBox<String> sortColumnComboBox;
-    private JButton sortButton;
-    private JButton filterButton;
-    private JLabel filterLabel;
-    private JTextField filterTextField;
+    private final JTable dataTable;
+    private final JComboBox<String> sortColumnComboBox;
+    private final JTextField filterTextField;
 
     public SecondWindow(JFrame parent) {
         super(parent, "Second Window", true);
@@ -75,30 +72,18 @@ public class SecondWindow extends JDialog {
         sortColumnComboBox.addItem("videoconferência");
         sortColumnComboBox.addItem("Átrio");
 
-        sortButton = new JButton("Sort");
-        sortButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                sortTableBySelectedColumn();
-            }
-        });
+        JButton sortButton = new JButton("Sort");
+        sortButton.addActionListener(e -> sortTableBySelectedColumn());
 
         upperPanel.add(sortColumnComboBox);
         upperPanel.add(sortButton);
 
-        // Create filter components
-        filterButton = new JButton("Filter");
-        filterLabel = new JLabel("Filter by: ");
+        JButton filterButton = new JButton("Filter");
+        JLabel filterLabel = new JLabel("Filter by: ");
         filterTextField = new JTextField(20);
 
-        // Add action listener for filter button
-        filterButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                filterTable();
-            }
-        });
+        filterButton.addActionListener(e -> filterTable());
 
-        // Add filter components to upperPanel
         upperPanel.add(filterLabel);
         upperPanel.add(filterTextField);
         upperPanel.add(filterButton);
@@ -106,16 +91,15 @@ public class SecondWindow extends JDialog {
         add(upperPanel, BorderLayout.NORTH);
 
         dataTable = new JTable();
-        tableScrollPane = new JScrollPane(dataTable);
+        JScrollPane tableScrollPane = new JScrollPane(dataTable);
         add(tableScrollPane, BorderLayout.CENTER);
 
         readCsvFileToSecondWindow();
 
-        setLocationRelativeTo(parent); // Center the window relative to the parent frame
+        setLocationRelativeTo(parent);
     }
 
     private void readCsvFileToSecondWindow() {
-        // Path to the CSV file
         String filePath = "files/preset/CaracterizaçãoDasSalas.csv";
         File csvFile = new File(filePath);
 
@@ -131,12 +115,11 @@ public class SecondWindow extends JDialog {
                     String[] values = line.split(";");
                     if (values.length == headers.length) {
                         JSONObject jsonObject = new JSONObject();
-                        for (int i = 0; i < headers.length && i < values.length; i++) {
+                        for (int i = 0; i < headers.length; i++) {
                             jsonObject.put(headers[i], values[i]);
                         }
-                        jsonArray.put(jsonObject);
+                        jsonArray.put(Collections.singleton(jsonObject));
                     } else {
-                        // Handle case where the number of values doesn't match the number of headers
                         System.err.println("Number of values doesn't match the number of headers: " + line);
                     }
                 }
@@ -152,26 +135,12 @@ public class SecondWindow extends JDialog {
     private void displayDataInTable(JSONArray jsonArray) {
         DefaultTableModel model = new DefaultTableModel();
 
-        // Define the specific order of column names
-        List<String> columnOrder = Arrays.asList(
-                "Edifício", "Nome sala", "Capacidade Normal", "Capacidade Exame",
-                "Nº características", "Anfiteatro aulas", "Apoio técnico eventos",
-                "Arq 1", "Arq 2", "Arq 3", "Arq 4", "Arq 5", "Arq 6", "Arq 9",
-                "BYOD (Bring Your Own Device)", "Focus Group", "Horário sala visível portal público",
-                "Laboratório de Arquitectura de Computadores I", "Laboratório de Arquitectura de Computadores II",
-                "Laboratório de Bases de Engenharia", "Laboratório de Electrónica", "Laboratório de Informática",
-                "Laboratório de Jornalismo", "Laboratório de Redes de Computadores I",
-                "Laboratório de Redes de Computadores II",
-                "Laboratório de Telecomunicações", "Sala Aulas Mestrado", "Sala Aulas Mestrado Plus",
-                "Sala NEE", "Sala Provas", "Sala Reunião", "Sala de Arquitectura", "Sala de Aulas normal",
-                "videoconferência", "Átrio");
+        List<String> columnOrder = Arrays.asList("Edifício", "Nome sala", "Capacidade Normal", "Capacidade Exame", "Nº características", "Anfiteatro aulas", "Apoio técnico eventos", "Arq 1", "Arq 2", "Arq 3", "Arq 4", "Arq 5", "Arq 6", "Arq 9", "BYOD (Bring Your Own Device)", "Focus Group", "Horário sala visível portal público", "Laboratório de Arquitectura de Computadores I", "Laboratório de Arquitectura de Computadores II", "Laboratório de Bases de Engenharia", "Laboratório de Electrónica", "Laboratório de Informática", "Laboratório de Jornalismo", "Laboratório de Redes de Computadores I", "Laboratório de Redes de Computadores II", "Laboratório de Telecomunicações", "Sala Aulas Mestrado", "Sala Aulas Mestrado Plus", "Sala NEE", "Sala Provas", "Sala Reunião", "Sala de Arquitectura", "Sala de Aulas normal", "videoconferência", "Átrio");
 
-        // Add columns in the specific order
         for (String columnName : columnOrder) {
             model.addColumn(columnName);
         }
 
-        // Add data rows
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject row = jsonArray.optJSONObject(i);
             if (row != null) {
@@ -183,10 +152,8 @@ public class SecondWindow extends JDialog {
             }
         }
 
-        // Set the table model
         dataTable.setModel(model);
 
-        // Enable sorting
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         dataTable.setRowSorter(sorter);
     }
@@ -200,25 +167,25 @@ public class SecondWindow extends JDialog {
     }
 
     private void sortTableByColumn(int columnIndex) {
+        TableRowSorter(columnIndex, dataTable);
+    }
+
+    static void TableRowSorter(int columnIndex, JTable dataTable) {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
         sorter.setSortable(dataTable.getColumnCount() - 1, false); // Disable sorting for last column
         dataTable.setRowSorter(sorter);
 
-        // Get the current sort keys
         List<RowSorter.SortKey> sortKeys = new ArrayList<>(sorter.getSortKeys());
 
-        // Check if the selected column is already sorted
         boolean sorted = false;
         for (RowSorter.SortKey sortKey : sortKeys) {
             if (sortKey.getColumn() == columnIndex) {
-                // Toggle sorting order
                 sorter.setSortKeys(null);
                 sorted = true;
                 break;
             }
         }
 
-        // If the column is not already sorted, sort it in ascending order
         if (!sorted) {
             sortKeys.clear();
             sortKeys.add(new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING));
@@ -236,24 +203,21 @@ public class SecondWindow extends JDialog {
     }
 
     private void filterTable() {
-        // Get the text entered in the filter text field
-        String filterText = filterTextField.getText().trim();
+        filterText(filterTextField, dataTable);
+    }
 
-        // If the filter text is empty, reset the table to display all rows
+    static void filterText(JTextField filterTextField, JTable dataTable) {
+        String filterText = filterTextField.getText().trim();
         if (filterText.isEmpty()) {
             ((DefaultRowSorter) dataTable.getRowSorter()).setRowFilter(null);
             return;
         }
 
-        // Create a RowFilter to filter rows based on the filter text
         RowFilter<DefaultTableModel, Object> rowFilter = RowFilter.regexFilter(filterText);
 
-        // Apply the RowFilter to the TableRowSorter of the table
         try {
             ((DefaultRowSorter) dataTable.getRowSorter()).setRowFilter(rowFilter);
         } catch (PatternSyntaxException ex) {
-            // If the filter text is not a valid regex pattern, ignore the filter
-            // You can handle this case based on your requirements
             System.err.println("Invalid regex pattern for filtering: " + ex.getMessage());
         }
     }
