@@ -7,7 +7,8 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js"></script>
     <script type="text/javascript">
-        function loadCSVWithCustomDelimiter(url, delimiter) {
+        // Define function to load CSV data and pass it to loadDataIntoTable
+        function fetchAndLoadCSV(url) {
             $.get(url, function (csvData) {
                 var parsedData = Papa.parse(csvData, {
                     delimiter: ";",
@@ -16,6 +17,18 @@
                 loadDataIntoTable(parsedData);
             });
         }
+
+        // Load CSV data on page load
+        $(document).ready(function () {
+            // Assuming App instance is available as 'app'
+            var jsonArray = app.getJsonArray();
+            if (jsonArray != null) {
+                loadDataIntoTable(jsonArray);
+            } else {
+                // Adjust the URL as needed
+                fetchAndLoadCSV("files/your_csv_file.csv");
+            }
+        });
 
         function loadDataIntoTable(data) {
             var table = new Tabulator("#example-table", {
@@ -34,31 +47,11 @@
                 ]
             });
         }
-
-        // Function to handle file input change event
-        function loadCSVWithCustomDelimiter(url) {
-            $.get(url, function (csvData) {
-                var parsedData = Papa.parse(csvData, {
-                    delimiter: ";",
-                    header: true
-                }).data;
-                loadDataIntoTable(parsedData);
-            });
-        }
-
-
-
-        // Attach event listener to file input element
-        document.getElementById('fileInput').addEventListener('change', handleFileInputChange);
-
-        // Initial load of CSV data with default delimiter ','
-        loadCSVWithCustomDelimiter("new.csv", ";");
     </script>
 </head>
 
 <body>
     <h1>Tipos de Salas de Aula</h1>
-    <input type="file" id="fileInput" accept=".csv">
     <div id="example-table"></div>
 </body>
 
