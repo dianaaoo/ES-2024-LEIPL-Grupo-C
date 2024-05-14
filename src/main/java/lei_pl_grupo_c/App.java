@@ -148,7 +148,7 @@ public class App extends JFrame {
         secondWindow.setVisible(true);
     }
 
-    private void readCsvFileToMainWindow() {
+    public void readCsvFileToMainWindow() {
         JFileChooser fileChooser = new JFileChooser(new File("files"));
         fileChooser.setDialogTitle("Choose CSV File");
         int userSelection = fileChooser.showOpenDialog(this);
@@ -178,6 +178,8 @@ public class App extends JFrame {
         }
         displayDataInTable(jsonArray);
     }
+
+    
 
     private void saveJsonFile() {
         if (jsonArray == null) {
@@ -428,4 +430,10 @@ public class App extends JFrame {
             }
         });
     }
+
+    // testing
+    public JSONArray getJsonArray() {
+        return this.jsonArray;
+    }
+    
 }

@@ -28,7 +28,7 @@ public class SecondWindow extends JDialog {
     private JButton sortButton;
     private JButton filterButton;
     private JLabel filterLabel;
-    private JTextField filterTextField;
+    JTextField filterTextField;
 
     public SecondWindow(JFrame parent) {
         super(parent, "Second Window", true);
@@ -114,7 +114,7 @@ public class SecondWindow extends JDialog {
         setLocationRelativeTo(parent); // Center the window relative to the parent frame
     }
 
-    private void readCsvFileToSecondWindow() {
+    public void readCsvFileToSecondWindow() {
         // Path to the CSV file
         String filePath = "files/preset/CaracterizaçãoDasSalas.csv";
         File csvFile = new File(filePath);
@@ -199,7 +199,7 @@ public class SecondWindow extends JDialog {
         }
     }
 
-    private void sortTableByColumn(int columnIndex) {
+    public void sortTableByColumn(int columnIndex) {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
         sorter.setSortable(dataTable.getColumnCount() - 1, false); // Disable sorting for last column
         dataTable.setRowSorter(sorter);
@@ -235,7 +235,7 @@ public class SecondWindow extends JDialog {
         return -1;
     }
 
-    private void filterTable() {
+    public void filterTable() {
         // Get the text entered in the filter text field
         String filterText = filterTextField.getText().trim();
 
@@ -257,4 +257,21 @@ public class SecondWindow extends JDialog {
             System.err.println("Invalid regex pattern for filtering: " + ex.getMessage());
         }
     }
+
+
+    // testing
+
+    public JSONArray getJsonArray() {
+        return this.jsonArray;
+    }
+
+    public JTable getDataTable() {
+        return this.dataTable;
+    }
+
+    public JTextField getFilterTextField() {
+        return this.filterTextField;
+    }
+
+
 }
