@@ -102,7 +102,6 @@ public class App extends JFrame {
         sortColumnComboBox.addItem("Características da sala pedida para a aula");
         sortColumnComboBox.addItem("Sala atribuída à aula");
 
-
         sortButton = new JButton("Sort");
         sortButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -131,7 +130,22 @@ public class App extends JFrame {
         upperPanel.add(filterTextField);
         upperPanel.add(filterButton);
 
+        // Create a button to open the second window
+        JButton openSecondWindowButton = new JButton("Ver caracterização das salas");
+        openSecondWindowButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                openSecondWindow();
+            }
+        });
+
+        bottomPanel.add(openSecondWindowButton);
+
         add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    private void openSecondWindow() {
+        SecondWindow secondWindow = new SecondWindow(this);
+        secondWindow.setVisible(true);
     }
 
     private void readCsvFile() {
