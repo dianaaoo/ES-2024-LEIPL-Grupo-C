@@ -124,18 +124,7 @@ public class ScheduleEntry {
         this.semanaSemestre = semanaSemestre;
     }
 
-    // Method to calculate semanaAno and semanaSemestre based on dataAula
-    public void calculateWeeks() {
-        LocalDate date = LocalDate.parse(dataAula); // Assuming dataAula is in ISO-8601 format (yyyy-MM-dd)
+    public void toCSV() {
         
-        // Calculating week of the year
-        WeekFields weekFields = WeekFields.of(Locale.getDefault());
-        semanaAno = date.get(weekFields.weekOfWeekBasedYear());
-        
-        // Calculating week of the semester
-        int startWeek = 1; // Assuming semester starts in week 1
-        int endWeek = 15; // Assuming semester ends in week 15
-        int daysSinceStart = date.getDayOfYear();
-        semanaSemestre = (daysSinceStart / 7) - ((startWeek * 7) / 7) + 1;
     }
 }
