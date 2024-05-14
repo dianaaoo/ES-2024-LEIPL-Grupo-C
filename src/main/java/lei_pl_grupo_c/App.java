@@ -7,7 +7,6 @@ import javax.swing.table.TableRowSorter;
 import org.json.*;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,26 +14,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
-import java.util.regex.PatternSyntaxException;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class App extends JFrame {
-    private JButton readCsvButton;
-    private JButton saveJsonButton;
-    private JButton readJsonButton;
-    private JButton saveCsvButton;
+    private final JButton readCsvButton;
+    private final JButton saveJsonButton;
+    private final JButton readJsonButton;
+    private final JButton saveCsvButton;
     private JSONArray jsonArray;
-    private JTable dataTable;
-    private JScrollPane tableScrollPane;
-    private JComboBox<String> sortColumnComboBox;
-    private JButton sortButton;
-    private JButton filterButton;
-    private JLabel filterLabel;
-    private JTextField filterTextField;
+    private final JTable dataTable;
+    private final JScrollPane tableScrollPane;
+    private final JComboBox<String> sortColumnComboBox;
+    private final JButton sortButton;
+    private final JButton filterButton;
+    private final JLabel filterLabel;
+    private final JTextField filterTextField;
 
     public App() {
         super("Schedule");
@@ -89,20 +82,16 @@ public class App extends JFrame {
         bottomPanel.add(sortColumnComboBox);
         bottomPanel.add(sortButton);
 
-        // Create filter components
         filterButton = new JButton("Filter");
         filterLabel = new JLabel("Filter by: ");
         filterTextField = new JTextField(20);
 
-        // Add action listener for filter button
         filterButton.addActionListener(e -> filterTable());
 
-        // Add filter components to upperPanel
         upperPanel.add(filterLabel);
         upperPanel.add(filterTextField);
         upperPanel.add(filterButton);
 
-        // Create a button to open the second window
         JButton openSecondWindowButton = new JButton("Ver caracterização das salas");
         openSecondWindowButton.addActionListener(e -> openSecondWindow());
 
@@ -269,35 +258,30 @@ public class App extends JFrame {
     private void displayDataInTable(JSONArray jsonArray) {
         DefaultTableModel model = new DefaultTableModel();
 
-        // Add the new columns "Semana do ano" and "Semana do semestre"
         model.addColumn("Semana do ano");
         model.addColumn("Semana do semestre");
 
-        // Add other existing columns
         JSONObject firstRow = jsonArray.optJSONObject(0);
         if (firstRow != null) {
             for (String key : firstRow.keySet()) {
-                if (!key.equals("1") && !key.equals("2")) { // Exclude columns 1 and 2
+                if (!key.equals("1") && !key.equals("2")) {
                     model.addColumn(key);
                 }
             }
         }
 
-        // Add data rows
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject row = jsonArray.optJSONObject(i);
             if (row != null) {
                 Object[] rowData = new Object[model.getColumnCount()];
                 int j = 0;
-                // Add data for the new columns "Semana do ano" and "Semana do semestre"
                 String classDateStr = row.optString("Data da aula", "");
                 int weekOfYear = calculateWeekOfYear(classDateStr, "02/09/2022");
                 int weekOfSemester = calculateWeekOfYear(classDateStr, "01/02/2023");
                 rowData[j++] = weekOfYear;
                 rowData[j++] = weekOfSemester;
-                // Add data for other existing columns
                 for (String key : row.keySet()) {
-                    if (!key.equals("1") && !key.equals("2")) { // Exclude columns 1 and 2
+                    if (!key.equals("1") && !key.equals("2")) {
                         rowData[j++] = row.get(key);
                     }
                 }
@@ -305,10 +289,8 @@ public class App extends JFrame {
             }
         }
 
-        // Set the table model
         dataTable.setModel(model);
 
-        // Enable sorting
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
         dataTable.setRowSorter(sorter);
     }
@@ -324,26 +306,21 @@ public class App extends JFrame {
             Calendar referenceCalendar = Calendar.getInstance();
             referenceCalendar.setTime(referenceDate);
 
-            // Calculate the difference in weeks
             long diffInMillis = calendar.getTimeInMillis() - referenceCalendar.getTimeInMillis();
             int weeksDiff = (int) (diffInMillis / (1000 * 60 * 60 * 24 * 7));
 
-            // Check if the week is before the reset date
             if (weeksDiff < 0) {
-                // Use the week count from the "Semana do ano" column
                 return calculateWeekOfYear(dateString, "02/09/2022");
             } else {
-                // Adjust to start from week 1
                 return weeksDiff + 1;
             }
         } catch (ParseException e) {
             e.printStackTrace();
-            return 0; // Error occurred, return 0
+            return 0;
         }
     }
 
     private void filterTable() {
-        // Get the text entered in the filter text field
         SecondWindow.filterText(filterTextField, dataTable);
     }
 

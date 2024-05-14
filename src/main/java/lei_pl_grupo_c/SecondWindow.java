@@ -172,7 +172,7 @@ public class SecondWindow extends JDialog {
 
     static void TableRowSorter(int columnIndex, JTable dataTable) {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) dataTable.getModel());
-        sorter.setSortable(dataTable.getColumnCount() - 1, false); // Disable sorting for last column
+        sorter.setSortable(dataTable.getColumnCount() - 1, false);
         dataTable.setRowSorter(sorter);
 
         List<RowSorter.SortKey> sortKeys = new ArrayList<>(sorter.getSortKeys());
